@@ -1,7 +1,30 @@
-describe('arbplural', function() {
+/*
+ * Copyright 2012 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-  beforeEach(function() {
-    arb.setLocale('en_US');
+var beforeAll = function(fn) {
+  it('[beforeAll]', fn)
+}
+
+var afterAll = function(fn) {
+  it('[afterAll]', fn)
+}
+
+describe('arbplural', function() {
+  beforeAll(function() {
+    arb.setPluralLanguage('en');
   });
 
   describe('plural regex', function() {
@@ -107,13 +130,13 @@ describe('arbplural', function() {
     });
 
     it('should not work with invalid locale like enUS', function() {
-      arb.setLocale('enUS');
+      arb.setPluralLanguage('enUS');
       expect(arb.msg(str, {'NUM': 1}))
-          . toEqual('{PERSON} added 1 people to her circle.');
+          .toEqual('{PERSON} added 1 people to her circle.');
     });
 
     it('should work with locale like ro', function() {
-      arb.setLocale('br');
+      arb.setPluralLanguage('br');
       expect(arb.msg(str, {'NUM': 1}))
           .toEqual('{PERSON} added somebody to her circle.');
       expect(arb.msg(str, {'NUM': 3}))

@@ -1,4 +1,18 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
+/*
+ * Copyright 2012 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 goog.require('goog.Uri');
 goog.require('goog.debug.DivConsole');
@@ -97,6 +111,11 @@ arb_editor = function(baseNamespace, opt_serviceUrl) {
   this.baseNamespace_ = baseNamespace;
 
   /**
+   * UI ComboBox for switching locale.
+   */
+  this.setLocaleCombo_ = new goog.ui.ComboBox();
+
+  /**
    * Logger.
    * @type {goog.debug.Logger}
    * @private
@@ -113,6 +132,8 @@ arb_editor = function(baseNamespace, opt_serviceUrl) {
  */
 arb_editor.prototype.decorate = function(elementId) {
   this.drawButtons_();
+  this.drawSelectLocaleCombo_();
+  this.drawAddLocaleCombo_();
   this.makeSplitPane_();
   this.makeTree_();
 
@@ -152,8 +173,9 @@ arb_editor.prototype.makeTree_ = function() {
   var that = this;
   goog.events.listen(this.tree_, goog.events.EventType.CHANGE,
     function(e) {
-      that.updateValue_(this.resId_);
-      that.updateAttr_(this.resId_);
+      that.updateStatus_('update value.');
+      that.updateValue_(that.resId_);
+      that.updateAttr_(that.resId_);
       that.updateDisplay_();
     });
 };
@@ -165,6 +187,7 @@ arb_editor.prototype.makeTree_ = function() {
 arb_editor.prototype.loadAllResources_ = function() {
   var that = this;
   var arbCallback = function(namespace) {
+    that.updateStatus_("encounter namespace:" + namespace);
     var arbNode = that.tree_.getTree().createNode(namespace);
     arbNode.setClientData(namespace);
     that.tree_.add(arbNode);
@@ -469,13 +492,6 @@ arb_editor.prototype.makeSplitPane_ = function() {
         that.resIdField.setEnabled(true);
       });
 
-  var updateButton = new goog.ui.Button();
-  updateButton.decorate(goog.dom.getElement('update_entry_btn'));
-  goog.events.listen(updateButton, goog.ui.Component.EventType.ACTION,
-      function(e) {
-        // Nothing need to be done, it will be updated automatically.
-      });
-
   var deleteButton = new goog.ui.Button();
   deleteButton.decorate(goog.dom.getElement('delete_entry_btn'));
   goog.events.listen(deleteButton, goog.ui.Component.EventType.ACTION,
@@ -530,7 +546,7 @@ arb_editor.prototype.drawButtons_ = function() {
   uploadButton.decorate(goog.dom.getElement('upload_btn'));
   goog.events.listen(uploadButton, goog.ui.Component.EventType.ACTION,
       function(e) {
-        that.uploadResource();
+        arb.iterateRegistry(function(namespace) {that.uploadResource_(namespace)});
       });
 
   var downloadButton = new goog.ui.Button();
@@ -540,17 +556,24 @@ arb_editor.prototype.drawButtons_ = function() {
       function(e) {
         that.downloadAllResources_();
       });
+};
 
-  var setLocaleCombo = new goog.ui.ComboBox();
-  setLocaleCombo.setUseDropdownArrow(true);
-  setLocaleCombo.setDefaultText('Set active locale');
+
+/**
+ * Draw select locale combo box.
+ * @private
+ */
+arb_editor.prototype.drawSelectLocaleCombo_ = function() {
+  this.setLocaleCombo_.setUseDropdownArrow(true);
+  this.setLocaleCombo_.setDefaultText('Set active locale');
   var localeList = this.getLocaleList_();
   for (var ind in localeList) {
-    setLocaleCombo.addItem(new goog.ui.ComboBoxItem(localeList[ind]));
+    this.setLocaleCombo_.addItem(new goog.ui.ComboBoxItem(localeList[ind]));
   }
-  setLocaleCombo.render(goog.dom.getElement('locale_combo'));
+  this.setLocaleCombo_.render(goog.dom.getElement('locale_combo'));
 
-  goog.events.listen(setLocaleCombo.getMenu(),
+  var that = this;
+  goog.events.listen(this.setLocaleCombo_.getMenu(),
     goog.ui.Component.EventType.ACTION,
     function(e) {
       var value = e.target.getValue();
@@ -558,8 +581,14 @@ arb_editor.prototype.drawButtons_ = function() {
       arb.localizeHtml();
       that.updateStatus_('Language switched.');
     });
+};
 
 
+/**
+ * Draws add locale combo box.
+ * @private
+ */
+arb_editor.prototype.drawAddLocaleCombo_ = function() {
   var addLanguageCb = new goog.ui.ComboBox();
   addLanguageCb.setUseDropdownArrow(true);
   addLanguageCb.setDefaultText('Add language');
@@ -569,7 +598,7 @@ arb_editor.prototype.drawButtons_ = function() {
   }
   addLanguageCb.render(goog.dom.getElement('add_lang_combo'));
 
-
+  var that = this;
   goog.events.listen(addLanguageCb.getMenu(),
       goog.ui.Component.EventType.ACTION,
       function(e) {
@@ -581,7 +610,7 @@ arb_editor.prototype.drawButtons_ = function() {
               r$.MSG_INPUT_PROMPT,
               function(result) {
                 that.updateStatus_(arb.msg(r$.MSG_ADD_LOCALE, result));
-                cb.addItem(new goog.ui.ComboBoxItem(result + ':use defined'));
+                cb.addItem(new goog.ui.ComboBoxItem(result + ':user defined'));
                 that.addLocale_(result);
               });
           myPrompt.setVisible(true);
@@ -851,21 +880,19 @@ arb_editor.prototype.downloadAllResources_ = function() {
 
 
 /**
- * Upload target arb to server. Due to restriction of JSONP, the piece is
- * uploaded one by one.
+ * Uploads resource as specified by namespace.
+ *
+ * @param namespace the fully qualified namespace of the resource to
+ *        uploaded.
  */
-arb_editor.prototype.uploadResource = function() {
-  var namespace = this.getCurrentFullNamespace_();
-  if (!namespace) {
-    return;
-  }
+arb_editor.prototype.uploadResource_ = function(namespace) {
   var resource = arb.getResource(namespace);
 
   var arbCopy = goog.cloneObject(resource);
   var that = this;
   var sendOne = function(namespace, arbCopy) {
     if (goog.object.isEmpty(arbCopy)) {
-      that.updateStatus_(arb.msg(r$.MSG_RESOURCE_UPLOADED, lang));
+      that.updateStatus_(arb.msg(r$.MSG_RESOURCE_UPLOADED, namespace));
       that.dirty_ = false;
       return;
     }
@@ -923,7 +950,6 @@ arb_editor.prototype.translate_ = function(resId, srcRes, dstRes) {
       '?projectId=' + this.projectId_ +
       '&source=' + srcRes['@@locale'] +
       '&target=' + dstRes['@@locale'] + '&q=';
-
   var jsonp = new goog.net.Jsonp(new goog.Uri(uriPrefix +
       escape(srcRes[resId])));
   var that = this;
@@ -936,7 +962,7 @@ arb_editor.prototype.translate_ = function(resId, srcRes, dstRes) {
           if (that.pendingTranslations_ != 0) {
             that.pendingTranslations_--;
             if (that.pendingTranslations_ == 0) {
-              alert('finished translation');
+              that.setLocaleCombo_.addItem(new goog.ui.ComboBoxItem(dstRes['@@locale']));
               that.removeAllResources_();
               that.loadAllResources_();
               that.updateDisplay_();

@@ -1,8 +1,28 @@
-describe('arbcore', function() {
+/*
+ * Copyright 2012 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-  beforeEach(function() {
-    arb.setLocale('en_US');
-  });
+var beforeAll = function(fn) {
+  it('[beforeAll]', fn)
+}
+
+var afterAll = function(fn) {
+  it('[afterAll]', fn)
+}
+
+describe('arbcore', function() {
 
   describe('arb.dbg.getType', function() {
     var resource = {
@@ -42,26 +62,101 @@ describe('arbcore', function() {
   });
 
   describe('arb.iterateRegistry', function() {
-    arb.register('namespace1', 'en', {'k':'v'});
-    arb.register('namespace1', 'ja', {'k':'v'});
-    arb.register('namespace2', 'ja', {'k':'v'});
-    arb.register('namespace3', 'en', {'k':'v'});
-
     var items = [];
-    arb.iterateRegistry(function(namespace) {
-      items.push(namespace);
+
+    beforeAll( function() {
+      arb.register(['namespace1:en', 'en', ''], {'k':'namespace1:en'});
+      arb.register('namespace1:ja', {'k':'v'});
+      arb.register('namespace2:ja', {'k':'v'});
+      arb.register('namespace3:en', {'k':'v'});
+
+      arb.iterateRegistry(function(namespace) {
+        items.push(namespace);
+      });
     });
+
     it('should return all namespaces', function() {
+      expect(items).toContain('en');
+      expect(items).toContain('');
       expect(items).toContain('namespace1:en');
       expect(items).toContain('namespace1:ja');
       expect(items).toContain('namespace2:ja');
       expect(items).toContain('namespace3:en');
     });
 
-    it('should not return shortcut to default namespace and locale',
-       function() {
-         expect(items.length == 4).toBeTruthy();
+    afterAll(function() {arb.resourceMap_ = {};});
+  });
+
+  describe('arb.getResource', function() {
+    beforeAll( function() {
+      arb.setResourceSelector('');
+      arb.register(['namespace1:en', 'en', ''], {'k':'namespace1:en'});
     });
+
+    it('should return the only resource with no selectors', function() {
+      expect(arb.getResource().k).toEqual('namespace1:en');
+    });
+    it('should return the only resource with empty selectors', function() {
+      expect(arb.getResource('').k).toEqual('namespace1:en');
+    });
+    it('should return the only resource with full selectors', function() {
+      expect(arb.getResource('namespace1:en').k).toEqual('namespace1:en');
+    });
+    it('should return the only resource with any selectors', function() {
+      expect(arb.getResource('namespace1:ja').k).toEqual('namespace1:en');
+      expect(arb.getResource('namespace2:ja').k).toEqual('namespace1:en');
+    });
+
+    afterAll(function() {arb.resourceMap_ = {};});
+  });
+
+  describe('arb.getResource(2)', function() {
+    beforeAll( function() {
+      arb.setResourceSelector('');
+      arb.register(['namespace1:en', 'namespace1'], {'k':'namespace1:en'});
+      arb.register(['namespace2:ja'], {'k':'namespace2:ja'});
+    });
+
+    it('should return default resource with no selectors', function() {
+      expect(arb.getResource().k).toEqual('namespace1:en');
+    });
+    it('should return default resource with empty selectors', function() {
+      expect(arb.getResource('').k).toEqual('namespace1:en');
+    });
+    it('should return resource with partial matched selectors', function() {
+      expect(arb.getResource('namespace1').k).toEqual('namespace1:en');
+    });
+    it('should return resource with partial matched selectors(2)', function() {
+      expect(arb.getResource('namespace2').k).toEqual('namespace2:ja');
+    });
+    it('should return resource with priority match', function() {
+      expect(arb.getResource('namespace1:ja').k).toEqual('namespace1:en');
+    });
+    it('should return resource with best match of selectors', function() {
+      expect(arb.getResource('ja').k).toEqual('namespace2:ja');
+    });
+
+    afterAll(function() {arb.resourceMap_ = {};});
+  });
+
+  describe('arb.getResource with global resource selectors', function() {
+    beforeAll( function() {
+      arb.setResourceSelector('ja');
+      arb.register(['namespace1:en', 'namespace1'], {'k':'namespace1:en'});
+      arb.register(['namespace2:en', 'namespace2'], {'k':'namespace2:en'});
+      arb.register(['namespace2:ja'], {'k':'namespace2:ja'});
+    });
+
+    it('should return resource suitable for global selectors', function() {
+      expect(arb.getResource().k).toEqual('namespace2:ja');
+      expect(arb.getResource('namespace2').k).toEqual('namespace2:ja');
+    });
+
+    it('should return resource first satisfy getResource parameters', function() {
+      expect(arb.getResource('namespace1').k).toEqual('namespace1:en');
+    });
+
+    afterAll(function() {arb.resourceMap_ = {};});
   });
 
   describe('arb.dbg.isInContext', function() {
