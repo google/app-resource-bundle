@@ -1,0 +1,58 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.6
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    grammarCompile
+}
+
+
+dependencies {
+  grammarCompile 'org.antlr:antlr:3.4'
+  compile 'org.antlr:antlr-runtime:3.4'
+  testCompile 'junit:junit:4.+'
+  compile 'org.jsoup:jsoup:1.6.1'
+  compile 'org.json:json:20090211'
+}
+
+
+task generateGrammarSources (description: 'Invokes the antlr3-task from ant to generate grammar sources') << {
+    generatedDir.mkdirs()
+
+    ant {
+        taskdef(name: 'antlr3', classname: 'org.apache.tools.ant.antlr.ANTLR3'){
+            classpath {
+                fileset(dir: 'build-deps', includes: 'ant-antlr3.jar')
+            }
+        }
+
+        antlr3( target: 'src/main/antlr/Javascript.g',
+                outputdirectory: 'build/generated-src/org/arb/extractor/'){
+            classpath {
+                pathelement(path: configurations.grammarCompile.asPath)
+            }
+        }
+    }
+}
+
+generateGrammarSources.ext.generatedDir = new File(project.buildDir.toString() + '/generated-src/org/arb/extractor')
+
+compileJava.dependsOn generateGrammarSources
+
+compileJava {
+    source 'build/generated-src/org/arb/extractor'
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Main-Class': 'org.arb.extractor.ExtractorApp'
+    }
+}
+
