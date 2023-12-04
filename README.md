@@ -1,5 +1,7 @@
 # ![] Application Resource Bundle (ARB)
 
+**See [Wiki](https://github.com/google/app-resource-bundle/wiki/ApplicationResourceBundleSpecification) for more details including the specification for ARB design.**
+
 Application Resource Bundle (abbr. ARB) is a localization resource format that is simple 
 (based on JSON), extensible (vocabulary can be added without affecting existing tools and
 usage), and directly usable (applications can access the resource directly from this format 
@@ -23,10 +25,6 @@ This is actually a sample app for use with our Javascript supporting library.
 
 A tool written in Java to automate resource extraction. It uses a generic parser (Antlr),
 which allow it to deal with many kinds of languages.
-
-## doc
-
-The specification for ARB design.
 
 ## third_party
 
