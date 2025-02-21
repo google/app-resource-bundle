@@ -1,6 +1,12 @@
-# ![] Application Resource Bundle (ARB)
+# Application Resource Bundle (ARB)
 
-**See [Wiki](https://github.com/google/app-resource-bundle/wiki/ApplicationResourceBundleSpecification) for more details including the specification for ARB design.**
+### Schema
+
+Explore or link to [the schema](schema/arb.json) defining the ARB format.
+
+### Wiki
+
+See [Wiki](https://github.com/google/app-resource-bundle/wiki/ApplicationResourceBundleSpecification) for more details including the specification for ARB design.
 
 Application Resource Bundle (abbr. ARB) is a localization resource format that is simple 
 (based on JSON), extensible (vocabulary can be added without affecting existing tools and
