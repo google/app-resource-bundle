@@ -180,7 +180,7 @@ describe('arbcore', function() {
     it('match prefix context', function() {
       expect(arb.dbg.isInContext(resource, '#res1', 'main')).toBeTruthy();
     });
-    it('match default globalo context', function() {
+    it('match default global context', function() {
       expect(arb.dbg.isInContext(resource, 'res2', 'main:level2')).toBeTruthy();
     });
   });
