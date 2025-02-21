@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$schema": "http://json-schema.org/schema",
     "$id": "arb.json",
     "title": "Product",
     "description": "A product in the catalog",
@@ -78,6 +78,7 @@
                                                 "compactLong",
                                                 "currency",
                                                 "decimalPattern",
+                                                "decimalPatternDigits",
                                                 "decimalPercentPattern",
                                                 "percentPattern",
                                                 "scientificPattern",
@@ -113,158 +114,21 @@
                                         },
                                         "format": {
                                             "type": "string",
+                                            "description": "The formatters are the ones provided by the DateFormat class in Dart's package:intl."
+                                        },
+                                        "isCustomDateFormat": {
                                             "oneOf": [
                                                 {
-                                                    "const": "d",
-                                                    "examples": [],
-                                                    "description": "DAY"
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "true",
+                                                        "false"
+                                                    ]
                                                 },
                                                 {
-                                                    "const": "E",
-                                                    "description": "ABBR_WEEKDAY"
-                                                },
-                                                {
-                                                    "const": "EEEE",
-                                                    "description": "WEEKDAY"
-                                                },
-                                                {
-                                                    "const": "LLL",
-                                                    "description": "ABBR_STANDALONE_MONTH"
-                                                },
-                                                {
-                                                    "const": "LLLL",
-                                                    "description": "STANDALONE_MONTH"
-                                                },
-                                                {
-                                                    "const": "M",
-                                                    "description": "NUM_MONTH"
-                                                },
-                                                {
-                                                    "const": "Md",
-                                                    "description": "NUM_MONTH_DAY"
-                                                },
-                                                {
-                                                    "const": "MEd",
-                                                    "description": "NUM_MONTH_WEEKDAY_DAY"
-                                                },
-                                                {
-                                                    "const": "MMM",
-                                                    "description": "ABBR_MONTH"
-                                                },
-                                                {
-                                                    "const": "MMMd",
-                                                    "description": "ABBR_MONTH_DAY"
-                                                },
-                                                {
-                                                    "const": "MMMEd",
-                                                    "description": "ABBR_MONTH_WEEKDAY_DAY"
-                                                },
-                                                {
-                                                    "const": "MMMM",
-                                                    "description": "MONTH"
-                                                },
-                                                {
-                                                    "const": "MMMMd",
-                                                    "description": "MONTH_DAY"
-                                                },
-                                                {
-                                                    "const": "MMMMEEEEd",
-                                                    "description": "MONTH_WEEKDAY_DAY"
-                                                },
-                                                {
-                                                    "const": "QQQ",
-                                                    "description": "ABBR_QUARTER"
-                                                },
-                                                {
-                                                    "const": "QQQQ",
-                                                    "description": "QUARTER"
-                                                },
-                                                {
-                                                    "const": "y",
-                                                    "description": "YEAR"
-                                                },
-                                                {
-                                                    "const": "yM",
-                                                    "description": "YEAR_NUM_MONTH"
-                                                },
-                                                {
-                                                    "const": "yMd",
-                                                    "description": "YEAR_NUM_MONTH_DAY"
-                                                },
-                                                {
-                                                    "const": "yMEd",
-                                                    "description": "YEAR_NUM_MONTH_WEEKDAY_DAY"
-                                                },
-                                                {
-                                                    "const": "yMMM",
-                                                    "description": "YEAR_ABBR_MONTH"
-                                                },
-                                                {
-                                                    "const": "yMMMd",
-                                                    "description": "YEAR_ABBR_MONTH_DAY"
-                                                },
-                                                {
-                                                    "const": "yMMMEd",
-                                                    "description": "YEAR_ABBR_MONTH_WEEKDAY_DAY"
-                                                },
-                                                {
-                                                    "const": "yMMMM",
-                                                    "description": "YEAR_MONTH"
-                                                },
-                                                {
-                                                    "const": "yMMMMd",
-                                                    "description": "YEAR_MONTH_DAY"
-                                                },
-                                                {
-                                                    "const": "yMMMMEEEEd",
-                                                    "description": "YEAR_MONTH_WEEKDAY_DAY"
-                                                },
-                                                {
-                                                    "const": "yQQQ",
-                                                    "description": "YEAR_ABBR_QUARTER"
-                                                },
-                                                {
-                                                    "const": "yQQQQ",
-                                                    "description": "YEAR_QUARTER"
-                                                },
-                                                {
-                                                    "const": "H",
-                                                    "description": "HOUR24"
-                                                },
-                                                {
-                                                    "const": "Hm",
-                                                    "description": "HOUR24_MINUTE"
-                                                },
-                                                {
-                                                    "const": "Hms",
-                                                    "description": "HOUR24_MINUTE_SECOND"
-                                                },
-                                                {
-                                                    "const": "j",
-                                                    "description": "HOUR"
-                                                },
-                                                {
-                                                    "const": "jm",
-                                                    "description": "HOUR_MINUTE"
-                                                },
-                                                {
-                                                    "const": "jms",
-                                                    "description": "HOUR_MINUTE_SECOND"
-                                                },
-                                                {
-                                                    "const": "m",
-                                                    "description": "MINUTE"
-                                                },
-                                                {
-                                                    "const": "ms",
-                                                    "description": "MINUTE_SECOND"
-                                                },
-                                                {
-                                                    "const": "s",
-                                                    "description": "SECOND"
+                                                    "type": "boolean"
                                                 }
-                                            ],
-                                            "description": "The formatters are the ones provided by the DateFormat class in Dart's package:intl."
+                                            ]
                                         },
                                         "example": {
                                             "type": "string"
@@ -277,7 +141,190 @@
                                         }
                                     },
                                     "description": "A Date placeholder.",
-                                    "additionalProperties": false
+                                    "additionalProperties": false,
+                                    "anyOf": [
+                                        {
+                                            "required": [
+                                                "isCustomDateFormat"
+                                            ],
+                                            "properties": {
+                                                "isCustomDateFormat": {
+                                                    "oneOf": [
+                                                        {
+                                                            "type": "string",
+                                                            "const": "true"
+                                                        },
+                                                        {
+                                                            "type": "boolean",
+                                                            "const": true
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "required": [
+                                                "format"
+                                            ],
+                                            "properties": {
+                                                "format": {
+                                                    "type": "string",
+                                                    "oneOf": [
+                                                        {
+                                                            "const": "d",
+                                                            "examples": [],
+                                                            "description": "DAY"
+                                                        },
+                                                        {
+                                                            "const": "E",
+                                                            "description": "ABBR_WEEKDAY"
+                                                        },
+                                                        {
+                                                            "const": "EEEE",
+                                                            "description": "WEEKDAY"
+                                                        },
+                                                        {
+                                                            "const": "LLL",
+                                                            "description": "ABBR_STANDALONE_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "LLLL",
+                                                            "description": "STANDALONE_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "M",
+                                                            "description": "NUM_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "Md",
+                                                            "description": "NUM_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MEd",
+                                                            "description": "NUM_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MMM",
+                                                            "description": "ABBR_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "MMMd",
+                                                            "description": "ABBR_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MMMEd",
+                                                            "description": "ABBR_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MMMM",
+                                                            "description": "MONTH"
+                                                        },
+                                                        {
+                                                            "const": "MMMMd",
+                                                            "description": "MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MMMMEEEEd",
+                                                            "description": "MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "QQQ",
+                                                            "description": "ABBR_QUARTER"
+                                                        },
+                                                        {
+                                                            "const": "QQQQ",
+                                                            "description": "QUARTER"
+                                                        },
+                                                        {
+                                                            "const": "y",
+                                                            "description": "YEAR"
+                                                        },
+                                                        {
+                                                            "const": "yM",
+                                                            "description": "YEAR_NUM_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "yMd",
+                                                            "description": "YEAR_NUM_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMEd",
+                                                            "description": "YEAR_NUM_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMMM",
+                                                            "description": "YEAR_ABBR_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "yMMMd",
+                                                            "description": "YEAR_ABBR_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMMMEd",
+                                                            "description": "YEAR_ABBR_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMMMM",
+                                                            "description": "YEAR_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "yMMMMd",
+                                                            "description": "YEAR_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMMMMEEEEd",
+                                                            "description": "YEAR_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yQQQ",
+                                                            "description": "YEAR_ABBR_QUARTER"
+                                                        },
+                                                        {
+                                                            "const": "yQQQQ",
+                                                            "description": "YEAR_QUARTER"
+                                                        },
+                                                        {
+                                                            "const": "H",
+                                                            "description": "HOUR24"
+                                                        },
+                                                        {
+                                                            "const": "Hm",
+                                                            "description": "HOUR24_MINUTE"
+                                                        },
+                                                        {
+                                                            "const": "Hms",
+                                                            "description": "HOUR24_MINUTE_SECOND"
+                                                        },
+                                                        {
+                                                            "const": "j",
+                                                            "description": "HOUR"
+                                                        },
+                                                        {
+                                                            "const": "jm",
+                                                            "description": "HOUR_MINUTE"
+                                                        },
+                                                        {
+                                                            "const": "jms",
+                                                            "description": "HOUR_MINUTE_SECOND"
+                                                        },
+                                                        {
+                                                            "const": "m",
+                                                            "description": "MINUTE"
+                                                        },
+                                                        {
+                                                            "const": "ms",
+                                                            "description": "MINUTE_SECOND"
+                                                        },
+                                                        {
+                                                            "const": "s",
+                                                            "description": "SECOND"
+                                                        }
+                                                    ],
+                                                    "description": "The formatters are the ones provided by the DateFormat class in Dart's package:intl."
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -288,6 +335,10 @@
                 "description": {
                     "type": "string",
                     "description": "A short paragraph describing the resource and how it is being used by the app, and message that need to be passed to localization process and translators."
+                },
+                "comment":{
+                    "type": "string",
+                    "description": "A comment on this resource. This is not intended to be sent to translators."
                 }
             },
             "description": "Metadata for a message.",
@@ -313,6 +364,10 @@
         },
         "@@author": {
             "description": "The author of these messages. In the case of localized ARB files it can contain the names/details of the translator.",
+            "type": "string"
+        },
+        "@@comment": {
+            "description": "A top-level comment for this file. This is not intended to be sent to translators.",
             "type": "string"
         }
     },
