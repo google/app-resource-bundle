@@ -1,0 +1,20 @@
+name: Validate examples against schema
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0' # weekly
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+      - name: Validate JSON
+        uses: walbo/validate-json@6a48fa79d27775ab3099cb09cf1d8dfe5c4dcf11
+        with:
+          files: example/*.json
+          schema: schemas/arb.json

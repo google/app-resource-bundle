@@ -12,30 +12,6 @@ In ARB, localizable resources are encoded as a JSON object. Each resource will h
 **Example:**
 
 ```json
-{
-    "@@locale": "en",
-    "@@context": "HomePage",
-    "helloAndWelcome": "Welcome {firstName} {lastName}!",
-    "@helloAndWelcome": {
-        "description": "Initial welcome message",
-        "placeholders": {
-            "firstName": {
-                "type": "String"
-            },
-            "lastName": {
-                "type": "String"
-            }
-        }
-    },
-    "newMessages": "You have {newMessages, plural, =0{No new messages} =1 {One new message} two{Two new Messages} other {{newMessages} new messages}}",
-    "@newMessages": {
-        "type": "text",
-        "description": "Number of new messages in inbox.",
-        "placeholders": {
-            "newMessages": {
-                "type": "int"
-            }
-        }
-    }
-}
+#TODO: add permalink to embed example in follow up PR
+#https://github.com/google/app-resource-bundle/blob/111somehash111/example/simple.arb
 ```
