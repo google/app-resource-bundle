@@ -12,5 +12,6 @@ In ARB, localizable resources are encoded as a JSON object. Each resource will h
 **Example:**
 
 ```json
-#TODO: add permalink to example/simple.arb in follow up PR
+#TODO: add permalink to embed example in follow up PR
+#https://github.com/google/app-resource-bundle/blob/111somehash111/example/simple.arb
 ```
