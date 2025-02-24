@@ -11,4 +11,4 @@ In ARB, localizable resources are encoded as a JSON object. Each resource will h
 
 **Example:**
 
-https://github.com/google/app-resource-bundle/blob/08652e17ea4f800a8cf3898961a242603a379c96/example/simple.arb
+https://github.com/google/app-resource-bundle/blob/08652e17ea4f800a8cf3898961a242603a379c96/example/simple.arb#L1-L26
