@@ -1,0 +1,378 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "arb.json",
+    "title": "Product",
+    "description": "A product in the catalog",
+    "type": "object",
+    "patternProperties": {
+        "^@@x-.+$": {
+            "type": [
+                "string",
+                "number",
+                "integer",
+                "boolean"
+            ],
+            "description": "A custom global attribute."
+        },
+        "^@(?!@).+$": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "text",
+                        "image",
+                        "css"
+                    ],
+                    "description": "The type of resource. Possible values are \"text\", \"image\", or \"css\". Program should not rely on this attribute in run time. It is mainly for the localization tools."
+                },
+                "context": {
+                    "type": "string",
+                    "description": "The context in which this resource applies. Context is organized in hierarchy, and level separated by \":\". Tools can use this information to restore the tree structure from ARB's flat layout. When this piece of information is missing, it defaults to global."
+                },
+                "placeholders": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.+$": {
+                            "oneOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "String"
+                                            ]
+                                        },
+                                        "example": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "description": "A named placeholder of type String.",
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "type"
+                                    ],
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "int",
+                                                "double",
+                                                "num"
+                                            ],
+                                            "description": "The type of the parameter, either String, Object, int, double, num, or DateTime."
+                                        },
+                                        "format": {
+                                            "type": "string",
+                                            "enum": [
+                                                "compact",
+                                                "compactCurrency",
+                                                "compactSimpleCurrency",
+                                                "compactLong",
+                                                "currency",
+                                                "decimalPattern",
+                                                "decimalPatternDigits",
+                                                "decimalPercentPattern",
+                                                "percentPattern",
+                                                "scientificPattern",
+                                                "simpleCurrency"
+                                            ],
+                                            "description": ""
+                                        },
+                                        "example": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "optionalParameters": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "description": "A number placeholder.",
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "type"
+                                    ],
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "DateTime"
+                                            ],
+                                            "description": "The type of the parameter, either String, Object, int, double, num, or DateTime."
+                                        },
+                                        "format": {
+                                            "type": "string",
+                                            "description": "The formatters are the ones provided by the DateFormat class in Dart's package:intl."
+                                        },
+                                        "isCustomDateFormat": {
+                                            "oneOf": [
+                                                {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "true",
+                                                        "false"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "boolean"
+                                                }
+                                            ]
+                                        },
+                                        "example": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "optionalParameters": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "description": "A Date placeholder.",
+                                    "additionalProperties": false,
+                                    "anyOf": [
+                                        {
+                                            "required": [
+                                                "isCustomDateFormat"
+                                            ],
+                                            "properties": {
+                                                "isCustomDateFormat": {
+                                                    "oneOf": [
+                                                        {
+                                                            "type": "string",
+                                                            "const": "true"
+                                                        },
+                                                        {
+                                                            "type": "boolean",
+                                                            "const": true
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "required": [
+                                                "format"
+                                            ],
+                                            "properties": {
+                                                "format": {
+                                                    "type": "string",
+                                                    "oneOf": [
+                                                        {
+                                                            "const": "d",
+                                                            "examples": [],
+                                                            "description": "DAY"
+                                                        },
+                                                        {
+                                                            "const": "E",
+                                                            "description": "ABBR_WEEKDAY"
+                                                        },
+                                                        {
+                                                            "const": "EEEE",
+                                                            "description": "WEEKDAY"
+                                                        },
+                                                        {
+                                                            "const": "LLL",
+                                                            "description": "ABBR_STANDALONE_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "LLLL",
+                                                            "description": "STANDALONE_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "M",
+                                                            "description": "NUM_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "Md",
+                                                            "description": "NUM_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MEd",
+                                                            "description": "NUM_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MMM",
+                                                            "description": "ABBR_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "MMMd",
+                                                            "description": "ABBR_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MMMEd",
+                                                            "description": "ABBR_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MMMM",
+                                                            "description": "MONTH"
+                                                        },
+                                                        {
+                                                            "const": "MMMMd",
+                                                            "description": "MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "MMMMEEEEd",
+                                                            "description": "MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "QQQ",
+                                                            "description": "ABBR_QUARTER"
+                                                        },
+                                                        {
+                                                            "const": "QQQQ",
+                                                            "description": "QUARTER"
+                                                        },
+                                                        {
+                                                            "const": "y",
+                                                            "description": "YEAR"
+                                                        },
+                                                        {
+                                                            "const": "yM",
+                                                            "description": "YEAR_NUM_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "yMd",
+                                                            "description": "YEAR_NUM_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMEd",
+                                                            "description": "YEAR_NUM_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMMM",
+                                                            "description": "YEAR_ABBR_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "yMMMd",
+                                                            "description": "YEAR_ABBR_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMMMEd",
+                                                            "description": "YEAR_ABBR_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMMMM",
+                                                            "description": "YEAR_MONTH"
+                                                        },
+                                                        {
+                                                            "const": "yMMMMd",
+                                                            "description": "YEAR_MONTH_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yMMMMEEEEd",
+                                                            "description": "YEAR_MONTH_WEEKDAY_DAY"
+                                                        },
+                                                        {
+                                                            "const": "yQQQ",
+                                                            "description": "YEAR_ABBR_QUARTER"
+                                                        },
+                                                        {
+                                                            "const": "yQQQQ",
+                                                            "description": "YEAR_QUARTER"
+                                                        },
+                                                        {
+                                                            "const": "H",
+                                                            "description": "HOUR24"
+                                                        },
+                                                        {
+                                                            "const": "Hm",
+                                                            "description": "HOUR24_MINUTE"
+                                                        },
+                                                        {
+                                                            "const": "Hms",
+                                                            "description": "HOUR24_MINUTE_SECOND"
+                                                        },
+                                                        {
+                                                            "const": "j",
+                                                            "description": "HOUR"
+                                                        },
+                                                        {
+                                                            "const": "jm",
+                                                            "description": "HOUR_MINUTE"
+                                                        },
+                                                        {
+                                                            "const": "jms",
+                                                            "description": "HOUR_MINUTE_SECOND"
+                                                        },
+                                                        {
+                                                            "const": "m",
+                                                            "description": "MINUTE"
+                                                        },
+                                                        {
+                                                            "const": "ms",
+                                                            "description": "MINUTE_SECOND"
+                                                        },
+                                                        {
+                                                            "const": "s",
+                                                            "description": "SECOND"
+                                                        }
+                                                    ],
+                                                    "description": "The formatters are the ones provided by the DateFormat class in Dart's package:intl."
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "description": "A map from placeholder id to placeholder properties, including description and example. Placeholder can be specified using number (as in \"{0}\") or name (as in \"{num}\"). Number starts from 0 and the corresponding argument(s) are passed directly as function arguments. Named arguments are provided through an map object that maps each name to its value.",
+                    "additionalProperties": false
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A short paragraph describing the resource and how it is being used by the app, and message that need to be passed to localization process and translators."
+                },
+                "comment":{
+                    "type": "string",
+                    "description": "A comment on this resource. This is not intended to be sent to translators."
+                }
+            },
+            "description": "Metadata for a message.",
+            "additionalProperties": false
+        },
+        "^(?!@@).+$": {
+            "type": "string",
+            "description": "The ID of a message"
+        }
+    },
+    "properties": {
+        "@@locale": {
+            "description": "The locale for which messages/resources are stored in this file.",
+            "type": "string"
+        },
+        "@@context": {
+            "description": "It describes (in text) the context in which all these resources apply.",
+            "type": "string"
+        },
+        "@@last_modified": {
+            "description": "The last modified time of this ARB file/data. It is presented in ISO8601 complete form with hour and minutes. Example like: 2011-09-08T09:42-07:00.",
+            "type": "string"
+        },
+        "@@author": {
+            "description": "The author of these messages. In the case of localized ARB files it can contain the names/details of the translator.",
+            "type": "string"
+        },
+        "@@comment": {
+            "description": "A top-level comment for this file. This is not intended to be sent to translators.",
+            "type": "string"
+        }
+    },
+    "required": [
+        "@@locale"
+    ],
+    "additionalProperties": false
+}
