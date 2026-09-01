@@ -12,7 +12,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
       - name: Validate JSON
         uses: walbo/validate-json@6a48fa79d27775ab3099cb09cf1d8dfe5c4dcf11
         with:
