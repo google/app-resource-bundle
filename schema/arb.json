@@ -344,7 +344,7 @@
             "description": "Metadata for a message.",
             "additionalProperties": false
         },
-        "^(?!@@).+$": {
+        "^(?!@).+$": {
             "type": "string",
             "description": "The ID of a message"
         }
